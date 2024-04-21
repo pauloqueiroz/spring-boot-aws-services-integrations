@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserContoller {
 
     UserService service;
+
     @GetMapping
     public String getUserPassword(){
         return service.getUserPassword();
