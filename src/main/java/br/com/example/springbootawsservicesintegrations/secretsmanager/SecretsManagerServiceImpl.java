@@ -1,5 +1,7 @@
 package br.com.example.springbootawsservicesintegrations.secretsmanager;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
@@ -8,8 +10,14 @@ import software.amazon.awssdk.services.secretsmanager.model.SecretsManagerExcept
 
 public class SecretsManagerServiceImpl implements SecretsManagerService {
 
+    private final String region;
 
-	@Override
+    @Autowired
+    public SecretsManagerServiceImpl(@Value("${aws.region}") String region) {
+        this.region = region;
+    }
+
+    @Override
     public String getSecretValue(String secretName) {
         try {
             SecretsManagerClient secretsClient = getSecretsManagerClient();
@@ -29,9 +37,9 @@ public class SecretsManagerServiceImpl implements SecretsManagerService {
         return null;
     }
 
-    private static SecretsManagerClient getSecretsManagerClient() {
+    private SecretsManagerClient getSecretsManagerClient() {
         return SecretsManagerClient.builder()
-                .region(Region.SA_EAST_1)
+                .region(Region.of(region))
                 .build();
     }
 
